@@ -4,14 +4,14 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Load data
-df = pd.read_csv("./MLchatbot/college_faq.csv")
+df = pd.read_csv("./MLchatbot/test.csv")
 
 # Vectorization
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(df["question"])
-
-# UI
-st.title("🎓 College Information Chatbot")
+print(X)
+# # UI
+st.title("National Post Graduate College")
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -20,7 +20,7 @@ user_query = st.text_input("Ask your question:")
 
 if user_query:
     st.session_state.history.append(("You:", user_query))
-
+print(st.session_state)
 if user_query:
     user_vec = vectorizer.transform([user_query])
     similarity = cosine_similarity(user_vec, X)
@@ -29,7 +29,6 @@ if user_query:
 
     if score > 0.3:
         st.write("**Answer:**", df["answers"][best_match])
-        st.write(f"Confidence: {score:.2f}")
         st.session_state.history.append(("Bot", df["answers"][best_match]))
 
 
