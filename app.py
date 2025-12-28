@@ -8,7 +8,7 @@ df = pd.read_csv("college_faq.csv")
 
 # Vectorization
 vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(df["question"])
+X = vectorizer.fit_transform(df["Questions"])
 
 # UI
 st.title("🎓 College Information Chatbot")
@@ -28,7 +28,7 @@ if user_query:
     score = similarity[0][best_match]
 
     if score > 0.3:
-        st.write("**Answer:**", df["answers"][best_match])
+        st.write("**Answer:**", df["Answers"][best_match])
         st.write(f"Confidence: {score:.2f}")
         st.session_state.history.append(("Bot", df["answers"][best_match]))
 
