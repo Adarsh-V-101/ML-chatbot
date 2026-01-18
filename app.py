@@ -29,10 +29,19 @@ if user_query:
         st.write("**Answer:**", df["Answers"][best_match])
         st.session_state.history.append(("Bot", df["Answers"][best_match]))
 
-
     else:
         st.write("Sorry, I don't have that information right now.")
         st.write("Please contact the college office for accurate details.")
 st.markdown("---")
 for sender, msg in st.session_state.history:
     st.write(f"**{sender}:** {msg}")
+
+st.markdown("---")
+st.markdown(
+    """
+    ### 📝 Feedback
+    Help us improve this chatbot by sharing your feedback 👇  
+    [Click here to give feedback](https://docs.google.com/forms/d/e/1FAIpQLSe2yn9_WaIjZmkVbAvpuLEY70YELvEoOaVmfbBYSC7aNkmzJA/viewform?usp=header)
+    """,
+    unsafe_allow_html=True,
+)
