@@ -9,7 +9,7 @@ df = pd.read_csv("college_faq.csv")
 # Vectorization
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(df["Question"])
-# # UI
+# UI
 st.title("National Post Graduate College")
 
 if "history" not in st.session_state:
@@ -19,7 +19,6 @@ user_query = st.text_input("Ask your question:")
 
 if user_query:
     st.session_state.history.append(("You:", user_query))
-if user_query:
     user_vec = vectorizer.transform([user_query])
     similarity = cosine_similarity(user_vec, X)
     best_match = similarity.argmax()
@@ -45,3 +44,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+
+# hitting api
