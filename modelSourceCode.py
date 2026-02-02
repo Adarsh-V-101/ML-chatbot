@@ -1,27 +1,26 @@
-import requests
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-try:
-    # myapi = "https://official-joke-api.appspot.com/random_joke"
-    # myapi = "https://api.restful-api.dev/objects/6"
-    # res = requests.delete(myapi)
-    myapi = "https://api.restful-api.dev/objects"
-    postdata = {
-        'id':'14',
-            "name": "Apple MacBook Pro 16",
-            "data": {
-                "year": 2019,
-                "price": 1849.99,
-                "CPU model": "Intel Core i9",
-                "Hard disk size": "1 TB",
-            },
-        }
-    res = requests.post(myapi,json = postdata)
-    # res = requests.get(myapi)
-    if res.status_code == 200:
-        print("success", res.status_code)
-        data = res.json()
-        print(data)
-    else:
-        print("got error", res.status_code, res.json())
-except:
-    print("Got some error please retry")
+flag = True
+df = pd.read_csv("college_faq.csv")
+# print('file found')
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(df["Question"])
+
+while flag == True:
+    user_query = input('Question: ')
+
+    if user_query.lower() == 'quit':
+        flag = False
+
+    elif user_query:
+        user_vec = vectorizer.transform([user_query])
+        print(type(user_vec))
+        print(user_vec)
+        similarity = cosine_similarity(user_vec, X)
+        best_match = similarity.argmax()
+        score = similarity[0][best_match]
+        print('Answer: ', df['Answers'][best_match])
+    else: 
+        print('How can i help you?...')
