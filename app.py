@@ -27,9 +27,6 @@ df["Conversational"] = df["Conversational"].fillna("")
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(df["Question"])
 
-# context memory
-last_best_match = None   # stores last matched row index
-
 # routes
 @app.route("/")
 def home():
@@ -37,7 +34,6 @@ def home():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    global last_best_match
 
     data = request.get_json()
     user_query = data.get("message", "").strip()
@@ -50,10 +46,11 @@ def chat():
     similarity = cosine_similarity(user_vec, X)
     best_match = similarity.argmax()
     score = similarity[0][best_match]
+    # print(similarity[0])
+    # print(best_match)
+    # print(score)
 
-    # contexaat handling
     if score > 0.3:
-        # last_best_match = best_match
         selected_index = best_match
          # random answer
         rand_num = random.randint(1, 4)
@@ -67,25 +64,10 @@ def chat():
         else:
             answer = df["Conversational"][selected_index]
 
-    # else:
-    #     if last_best_match is not None:
-    #         selected_index = last_best_match
     else:
         return jsonify({
             "reply": "Sorry, I couldn't understand that. Could you please rephrase?"
         })
-
-    # random answer
-    rand_num = random.randint(1, 4)
-
-    if rand_num == 1:
-        answer = df["Informational"][selected_index]
-    elif rand_num == 2:
-        answer = df["Guidance oriented"][selected_index]
-    elif rand_num == 3:
-        answer = df["Institutional"][selected_index]
-    else:
-        answer = df["Conversational"][selected_index]
 
     # for empty answers
     if (
